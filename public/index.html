@@ -1,0 +1,109 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <title>FruitieX</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .gh {
+            width: 92px;
+            height: 92px;
+        }
+
+        @keyframes in {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animate-in {
+            animation-name: in;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-out;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes out {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(20);
+                opacity: 0;
+            }
+        }
+
+        .animate-out {
+            animation-name: out;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-out;
+            animation-duration: 1.5s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes darken {
+            0% {
+                background-color: white;
+            }
+
+            100% {
+                background-color: #0D1117;
+            }
+        }
+
+        .darken {
+            animation-name: darken;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-out;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="https://github.com/FruitieX" class="animate-in"><img class="gh" src="github-logo.svg" alt="GitHub" />
+        <script>
+            const a = document.querySelector('a');
+            const body = document.querySelector('body');
+
+            window.onpageshow = () => {
+                a.className = "animate-in";
+                body.className = "";
+            }
+
+            const animate = () => {
+                a.className = "animate-out";
+                body.className = "darken";
+            };
+
+            a.onclick = animate;
+            a.ontouchend = animate;
+        </script>
+</body>
+
+</html>
