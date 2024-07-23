@@ -1,2 +1,2 @@
-FROM nginx:alpine@sha256:1e67a3c8607fe555f47dc8a72f25424b10273639136c061c508628da3112f90e
+FROM nginx:alpine@sha256:fbb400a7f82655026d277472e27b1668fcdec84eaf4d0045f3bf86e0092826b3
 COPY public /usr/share/nginx/html
