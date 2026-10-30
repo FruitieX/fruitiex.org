@@ -47,6 +47,29 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
+      - name: Build for smoke test
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          cache-from: type=gha
+          platforms: linux/amd64
+          load: true
+          tags: site:ci
+
+      # Gates PRs (incl. Renovate's automerged base-image bumps) and main before publishing.
+      - name: Smoke test image
+        run: |
+          docker run -d --rm --sysctl net.ipv4.ip_unprivileged_port_start=0 -p 8080:80 --name site site:ci
+          for _ in $(seq 1 30); do curl -fsS http://127.0.0.1:8080/ -o "$RUNNER_TEMP/index.html" && break; sleep 1; done
+          grep -q '<title>FruitieX</title>' "$RUNNER_TEMP/index.html"
+          curl -fsS -o /dev/null http://127.0.0.1:8080/github-logo.svg
+          # Render the page and fail on any console output (errors, failed loads).
+          google-chrome --headless=new --no-sandbox --enable-logging=stderr --v=0 \
+            --dump-dom http://127.0.0.1:8080/ > "$RUNNER_TEMP/dom.html" 2> "$RUNNER_TEMP/chrome.log"
+          grep -q 'class="gh"' "$RUNNER_TEMP/dom.html"
+          if grep ':CONSOLE' "$RUNNER_TEMP/chrome.log"; then exit 1; fi
+          docker stop site
+
       - name: Build
         id: build
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
